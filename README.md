@@ -1,6 +1,6 @@
 # Job Search App
 
-##API based Job search app
+## API based Job search app
 
 This an API based react native app that can be used to search for jobs any where around the world.
 No user authentication included in the app.
