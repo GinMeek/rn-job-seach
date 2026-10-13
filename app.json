@@ -1,13 +1,40 @@
 {
   "expo": {
-    "scheme": "acme",
+    "name": "JobPulse",
+    "slug": "job-pulse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "jobpulse",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAFAFC"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAFAFC"
+      },
+      "package": "com.jobpulse.app",
+      "permissions": [
+        "INTERNET"
+      ]
+    },
     "web": {
+      "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
-    ],
-    "name": "job-search",
-    "slug": "job-search"
+      "expo-router",
+      "expo-font"
+    ]
   }
 }

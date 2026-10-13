@@ -1,10 +1,13 @@
 import { StyleSheet } from "react-native";
-
-import { COLORS, FONT, SIZES } from "../constants";
+import { COLORS, FONT, SIZES, SHADOWS } from "../constants";
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    marginBottom: SIZES.small,
+  },
+  titleRow: {
+    marginBottom: SIZES.small,
   },
   searchTitle: {
     fontFamily: FONT.bold,
@@ -12,46 +15,73 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   noOfSearchedJobs: {
-    marginTop: 2,
+    marginTop: 4,
+    fontFamily: FONT.regular,
+    fontSize: SIZES.small + 1,
+    color: COLORS.gray,
+  },
+  filterRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: SIZES.small,
+    marginBottom: SIZES.small,
+  },
+  sourceBtn: (isActive) => ({
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: isActive ? COLORS.primary : COLORS.white,
+    borderWidth: 1,
+    borderColor: isActive ? COLORS.primary : COLORS.border,
+  }),
+  sourceBtnText: (isActive) => ({
     fontFamily: FONT.medium,
     fontSize: SIZES.small,
-    color: COLORS.primary,
-  },
+    color: isActive ? COLORS.white : COLORS.gray,
+  }),
   loaderContainer: {
-    marginTop: SIZES.medium,
-  },
-  footerContainer: {
-    marginTop: SIZES.small,
-    justifyContent: "center",
+    marginVertical: SIZES.large,
     alignItems: "center",
-    flexDirection: "row",
-    gap: 10,
   },
-  paginationButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 5,
-    justifyContent: "center",
+  errorContainer: {
+    marginVertical: SIZES.medium,
     alignItems: "center",
-    backgroundColor: COLORS.tertiary,
   },
-  paginationImage: {
-    width: "60%",
-    height: "60%",
-    tintColor: COLORS.white,
+  errorText: {
+    color: COLORS.tertiary,
+    fontFamily: FONT.regular,
+    fontSize: SIZES.small + 2,
+    marginBottom: 8,
   },
-  paginationTextBox: {
-    width: 30,
-    height: 30,
-    borderRadius: 2,
-    justifyContent: "center",
+  retryBtn: {
+    backgroundColor: COLORS.accentLight,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  retryBtnText: {
+    color: COLORS.accent,
+    fontFamily: FONT.medium,
+    fontSize: SIZES.small,
+  },
+  emptyContainer: {
+    paddingVertical: 50,
     alignItems: "center",
-    backgroundColor: COLORS.white,
+    justifyContent: "center",
+    paddingHorizontal: SIZES.large,
   },
-  paginationText: {
+  emptyTitle: {
     fontFamily: FONT.bold,
-    fontSize: SIZES.medium,
+    fontSize: SIZES.medium + 1,
     color: COLORS.primary,
+    marginBottom: 6,
+  },
+  emptySubtitle: {
+    fontFamily: FONT.regular,
+    fontSize: SIZES.small + 1,
+    color: COLORS.gray,
+    textAlign: "center",
+    lineHeight: 20,
   },
 });
 

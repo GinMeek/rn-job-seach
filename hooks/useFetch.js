@@ -1,47 +1,64 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { API_KEY_RAPID } from "@env";
-import useLocation from "./useLocation";
+import { useState, useEffect, useCallback } from "react";
+import jobService from "../services/jobService";
 
-const rapidApiKey = API_KEY_RAPID;
-
-const useFetch = (endpoint, query) => {
-  const { locationError, locationLoading } = useLocation();
+/**
+ * Custom hook to fetch jobs from the unified open API service (Remotive & Arbeitnow)
+ * Fully compatible with existing component signatures.
+ *
+ * @param {string} endpoint - 'popular' | 'latest' | 'search' | 'job-details'
+ * @param {object} query - optional query parameters (e.g. { query: 'React' } or { job_id: '123' })
+ */
+const useFetch = (endpoint, query = {}) => {
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(locationLoading);
-  const [error, setError] = useState(locationError);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const options = {
-    method: "GET",
-    url: `https://jsearch.p.rapidapi.com/${endpoint}`,
-    headers: {
-      "X-RapidAPI-Key": rapidApiKey,
-      "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-    },
-    params: { ...query },
-  };
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await axios.request(options);
+      let result = [];
 
-      setData(response.data.data);
-      setIsLoading(false);
-    } catch (error) {
-      setError(error);
+      switch (endpoint) {
+        case "popular":
+          result = await jobService.getPopularJobs();
+          break;
+
+        case "latest":
+        case "nearby":
+          result = await jobService.getLatestJobs();
+          break;
+
+        case "job-details": {
+          const jobId = query?.job_id;
+          const job = await jobService.getJobById(jobId);
+          result = job ? [job] : [];
+          break;
+        }
+
+        case "search":
+        default: {
+          const searchQuery = query?.query || "";
+          result = await jobService.fetchAllJobs({ query: searchQuery });
+          break;
+        }
+      }
+
+      setData(result);
+    } catch (err) {
+      console.error("useFetch error:", err);
+      setError(err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [endpoint, query?.query, query?.job_id]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const refetch = () => {
-    setIsLoading(true);
     fetchData();
   };
 
@@ -49,4 +66,3 @@ const useFetch = (endpoint, query) => {
 };
 
 export default useFetch;
-

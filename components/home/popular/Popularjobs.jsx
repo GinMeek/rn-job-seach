@@ -15,32 +15,42 @@ import useFetch from "../../../hooks/useFetch";
 
 const Popularjobs = () => {
   const router = useRouter();
-  const [selectedJob, setSelectedJob] = useState();
-  const { data, isLoading, error } = useFetch("search", {
-    query: "Remote developer jobs",
-    num_pages: 1,
-    page: 1,
-  });
+  const [selectedJob, setSelectedJob] = useState(null);
+  const { data, isLoading, error, refetch } = useFetch("popular");
 
   const handleCardPress = (item) => {
-    router.push(`/job-details/${item.job_id}`);
     setSelectedJob(item.job_id);
+    router.push(`/job-details/${item.job_id}`);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Popular jobs</Text>
-        <TouchableOpacity>
-          <Text style={styles.headerBtn}>Show all</Text>
+        <View>
+          <Text style={styles.headerTitle}>Featured Roles</Text>
+          <Text style={styles.headerSubtitle}>Curated high-impact positions</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push("/search/Developer")}>
+          <Text style={styles.headerBtn}>View all</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.cardsContainer}>
         {isLoading ? (
-          <ActivityIndicator size="large" colors={COLORS.primary} />
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" color={COLORS.accent} />
+          </View>
         ) : error ? (
-          <Text>{error.message}</Text>
+          <View style={styles.centerContainer}>
+            <Text style={styles.errorText}>Unable to load jobs</Text>
+            <TouchableOpacity onPress={refetch} style={styles.retryBtn}>
+              <Text style={styles.retryText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : data.length === 0 ? (
+          <View style={styles.centerContainer}>
+            <Text style={styles.emptyText}>No featured jobs at the moment</Text>
+          </View>
         ) : (
           <FlatList
             data={data}
@@ -51,9 +61,10 @@ const Popularjobs = () => {
                 selectedJob={selectedJob}
               />
             )}
-            keyExtractor={(item) => item?.job_id}
+            keyExtractor={(item) => item.job_id}
             contentContainerStyle={{ columnGap: SIZES.medium }}
             horizontal
+            showsHorizontalScrollIndicator={false}
           />
         )}
       </View>

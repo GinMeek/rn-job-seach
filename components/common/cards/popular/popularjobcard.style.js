@@ -1,58 +1,141 @@
 import { StyleSheet } from "react-native";
-
 import { COLORS, FONT, SHADOWS, SIZES } from "../../../../constants";
 
 const styles = StyleSheet.create({
-  container: (selectedJob, item) => ({
-    width: 250,
-    padding: SIZES.xLarge,
-    backgroundColor: selectedJob === item.job_id ? COLORS.primary : "#FFF",
-    borderRadius: SIZES.medium,
+  container: (isSelected) => ({
+    width: 270,
+    padding: SIZES.medium,
+    backgroundColor: isSelected ? COLORS.primary : COLORS.card,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: isSelected ? COLORS.primary : COLORS.border,
     justifyContent: "space-between",
     ...SHADOWS.medium,
-    shadowColor: COLORS.white,
   }),
-  logoContainer: (selectedJob, item) => ({
-    width: 50,
-    height: 50,
-    backgroundColor: selectedJob === item.job_id ? "#FFF" : COLORS.white,
-    borderRadius: SIZES.medium,
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  logoContainer: {
+    width: 48,
+    height: 48,
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     justifyContent: "center",
     alignItems: "center",
-  }),
+    overflow: "hidden",
+  },
   logoImage: {
-    width: "70%",
-    height: "70%",
+    width: "80%",
+    height: "80%",
   },
-  companyName: {
-    fontSize: SIZES.medium,
-    fontFamily: FONT.regular,
-    color: "#B3AEC6",
-    marginTop: SIZES.small / 1.5,
-  },
-  infoContainer: {
-    marginTop: SIZES.large,
-  },
-  jobName: (selectedJob, item) => ({
-    fontSize: SIZES.large,
-    fontFamily: FONT.medium,
-    color: selectedJob === item.job_id ? COLORS.white : COLORS.primary,
-  }),
-  infoWrapper: {
-    flexDirection: "row",
-    marginTop: 5,
-    justifyContent: "flex-start",
+  initialsContainer: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: COLORS.accentLight,
+    justifyContent: "center",
     alignItems: "center",
   },
-  publisher: (selectedJob) => ({
-    fontSize: SIZES.medium - 2,
+  initialsText: {
+    fontSize: SIZES.medium,
     fontFamily: FONT.bold,
-    color: selectedJob === item.job_id ? COLORS.white : COLORS.primary,
+    color: COLORS.accent,
+  },
+  badgeColumn: {
+    alignItems: "flex-end",
+    gap: 4,
+  },
+  timeBadge: {
+    backgroundColor: "#F1F5F9",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  timeBadgeText: {
+    fontSize: SIZES.xSmall + 1,
+    fontFamily: FONT.medium,
+    color: COLORS.gray,
+  },
+  sourceBadge: (source) => ({
+    backgroundColor: source === "Remotive" ? "#EFF6FF" : "#F5F3FF",
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: source === "Remotive" ? "#BFDBFE" : "#DDD6FE",
   }),
-  location: {
-    fontSize: SIZES.medium - 2,
+  sourceBadgeText: (source) => ({
+    fontSize: SIZES.xSmall,
+    fontFamily: FONT.bold,
+    color: source === "Remotive" ? "#1D4ED8" : "#6D28D9",
+  }),
+  infoContainer: {
+    marginTop: SIZES.small,
+    marginBottom: SIZES.small,
+  },
+  companyName: {
+    fontSize: SIZES.small + 1,
     fontFamily: FONT.regular,
-    color: "#B3AEC6",
+    color: COLORS.gray,
+    marginBottom: 4,
+  },
+  jobName: (isSelected) => ({
+    fontSize: SIZES.medium,
+    fontFamily: FONT.bold,
+    color: isSelected ? COLORS.white : COLORS.primary,
+    lineHeight: 22,
+  }),
+  bottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 6,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#F1F5F9",
+  },
+  locationWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    marginRight: 6,
+  },
+  locationIcon: {
+    width: 14,
+    height: 14,
+    tintColor: COLORS.gray,
+    marginRight: 4,
+  },
+  locationText: {
+    fontSize: SIZES.small,
+    fontFamily: FONT.regular,
+    color: COLORS.gray,
+    flexShrink: 1,
+  },
+  salaryBadge: {
+    backgroundColor: COLORS.successLight,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  salaryText: {
+    fontSize: SIZES.xSmall,
+    fontFamily: FONT.bold,
+    color: COLORS.success,
+  },
+  remoteBadge: {
+    backgroundColor: COLORS.accentLight,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  remoteText: {
+    fontSize: SIZES.xSmall,
+    fontFamily: FONT.bold,
+    color: COLORS.accent,
   },
 });
 

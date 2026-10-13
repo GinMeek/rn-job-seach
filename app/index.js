@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { View, ScrollView, SafeAreaView } from "react-native";
+import { useState, useCallback } from "react";
+import { View, ScrollView, SafeAreaView, RefreshControl } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { COLORS, icons, images, SIZES } from "../constants";
@@ -9,10 +9,25 @@ import {
   ScreenHeaderBtn,
   Welcome,
 } from "../components";
+import jobService from "../services/jobService";
 
 const Home = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await jobService.fetchAllJobs({ forceRefresh: true });
+      setRefreshKey((prev) => prev + 1);
+    } catch (err) {
+      console.warn("Refresh error:", err);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   return (
     <SafeAreaView
@@ -35,24 +50,34 @@ const Home = () => {
         }}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.accent]}
+          />
+        }
+      >
         <View
           style={{
             flex: 1,
             padding: SIZES.medium,
+            paddingBottom: 40,
           }}
         >
           <Welcome
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             handleClick={() => {
-              if (searchTerm) {
-                router.push(`/search/${searchTerm}`);
+              if (searchTerm.trim()) {
+                router.push(`/search/${encodeURIComponent(searchTerm.trim())}`);
               }
             }}
           />
-          <Popularjobs />
-          <Nearbyjobs />
+          <Popularjobs key={`popular-${refreshKey}`} />
+          <Nearbyjobs key={`nearby-${refreshKey}`} />
         </View>
       </ScrollView>
     </SafeAreaView>

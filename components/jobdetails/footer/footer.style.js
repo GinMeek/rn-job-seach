@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-
-import { COLORS, FONT, SIZES } from "../../../constants";
+import { COLORS, FONT, SIZES, SHADOWS } from "../../../constants";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,34 +7,40 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: SIZES.small,
-    backgroundColor: "#FFF",
+    paddingHorizontal: SIZES.medium,
+    paddingVertical: SIZES.small,
+    backgroundColor: COLORS.white,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    ...SHADOWS.large,
   },
-  likeBtn: {
-    width: 55,
-    height: 55,
+  likeBtn: (isSaved) => ({
+    width: 52,
+    height: 52,
     borderWidth: 1,
-    borderColor: "#F37453",
-    borderRadius: SIZES.medium,
+    borderColor: isSaved ? COLORS.tertiary : COLORS.border,
+    backgroundColor: isSaved ? "#FFF1EE" : COLORS.white,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-  },
-  likeBtnImage: {
-    width: "40%",
-    height: "40%",
-    tintColor: "#F37453",
-  },
+  }),
+  likeBtnImage: (isSaved) => ({
+    width: 24,
+    height: 24,
+    tintColor: isSaved ? COLORS.tertiary : COLORS.gray,
+  }),
   applyBtn: {
     flex: 1,
-    backgroundColor: "#FE7654",
-    height: "100%",
+    backgroundColor: COLORS.accent,
+    height: 52,
     justifyContent: "center",
     alignItems: "center",
     marginLeft: SIZES.medium,
-    borderRadius: SIZES.medium,
+    borderRadius: 14,
+    ...SHADOWS.small,
   },
   applyBtnText: {
     fontSize: SIZES.medium,

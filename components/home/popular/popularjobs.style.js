@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-
 import { FONT, SIZES, COLORS } from "../../../constants";
 
 const styles = StyleSheet.create({
@@ -9,20 +8,54 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   headerTitle: {
     fontSize: SIZES.large,
-    fontFamily: FONT.medium,
+    fontFamily: FONT.bold,
     color: COLORS.primary,
   },
-  headerBtn: {
-    fontSize: SIZES.medium,
-    fontFamily: FONT.medium,
+  headerSubtitle: {
+    fontSize: SIZES.small,
+    fontFamily: FONT.regular,
     color: COLORS.gray,
+    marginTop: 2,
+  },
+  headerBtn: {
+    fontSize: SIZES.small + 2,
+    fontFamily: FONT.medium,
+    color: COLORS.accent,
   },
   cardsContainer: {
     marginTop: SIZES.medium,
+    minHeight: 180,
+  },
+  centerContainer: {
+    paddingVertical: SIZES.large,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    fontFamily: FONT.regular,
+    fontSize: SIZES.small + 2,
+    color: COLORS.tertiary,
+    marginBottom: 8,
+  },
+  retryBtn: {
+    backgroundColor: COLORS.accentLight,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  retryText: {
+    fontFamily: FONT.medium,
+    fontSize: SIZES.small,
+    color: COLORS.accent,
+  },
+  emptyText: {
+    fontFamily: FONT.regular,
+    fontSize: SIZES.small + 2,
+    color: COLORS.gray,
   },
 });
 

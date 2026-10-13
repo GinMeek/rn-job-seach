@@ -1,29 +1,17 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
+/**
+ * Hook to provide approximate user location with instant fallback
+ */
 const useLocation = () => {
-  const [location, setLocation] = useState("US");
+  const [location, setLocation] = useState("Worldwide");
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationError, setLocationError] = useState(null);
 
-  const fetchData = async () => {
-    setLocationLoading(true);
-
-    try {
-      const response = await axios.get("https://api.ipregistry.co/?key=tryout");
-      const data = response.data;
-
-      setLocation(data.location.country.name);
-      setLocationLoading(false);
-    } catch (error) {
-      setLocationError(error);
-    } finally {
-      setLocationLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    // Keep it lightweight and reliable without external rate-limited demo keys
+    setLocation("Remote");
+    setLocationLoading(false);
   }, []);
 
   return { location, locationLoading, locationError };

@@ -5,42 +5,47 @@ import styles from "./nearbyjobs.style";
 import { COLORS } from "../../../constants";
 import NearbyJobCard from "../../common/cards/nearby/NearbyJobCard";
 import useFetch from "../../../hooks/useFetch";
-import useLocation from "../../../hooks/useLocation";
 
 const Nearbyjobs = () => {
   const router = useRouter();
-  const { location } = useLocation();
-  const { data, isLoading, error } = useFetch("search", {
-    query: `Developer jobs ${location}`,
-    num_pages: 1,
-    page: 1,
-  });
+  const { data, isLoading, error, refetch } = useFetch("latest");
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Nearby jobs</Text>
-        <TouchableOpacity onPress={router.push(`/search/${data}`)}>
-          <Text style={styles.headerBtn}>Show all</Text>
+        <View>
+          <Text style={styles.headerTitle}>Latest Positions</Text>
+          <Text style={styles.headerSubtitle}>Real-time updates sorted by newest</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push("/search/Latest")}>
+          <Text style={styles.headerBtn}>View all</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.cardsContainer}>
         {isLoading ? (
-          <ActivityIndicator size="large" colors={COLORS.primary} />
-        ) : error ? (
-          <Text>{error.message}</Text>
-        ) : (
-          <View>
-            <Text>Jobs in {location}</Text>
-            {data?.map((job) => (
-              <NearbyJobCard
-                job={job}
-                key={`nearby-job-${job?.job_id}`}
-                handleNavigate={() => router.push(`/job-details/${job.job_id}`)}
-              />
-            ))}
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" color={COLORS.accent} />
           </View>
+        ) : error ? (
+          <View style={styles.centerContainer}>
+            <Text style={styles.errorText}>Unable to load recent positions</Text>
+            <TouchableOpacity onPress={refetch} style={styles.retryBtn}>
+              <Text style={styles.retryText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : data.length === 0 ? (
+          <View style={styles.centerContainer}>
+            <Text style={styles.emptyText}>No recent positions found</Text>
+          </View>
+        ) : (
+          data.map((job) => (
+            <NearbyJobCard
+              job={job}
+              key={job.job_id}
+              handleNavigate={() => router.push(`/job-details/${job.job_id}`)}
+            />
+          ))
         )}
       </View>
     </View>
