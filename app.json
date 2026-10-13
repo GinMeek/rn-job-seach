@@ -35,6 +35,15 @@
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3a3bb4c6-d29e-40b9-9670-cfb9cd5aa799"
+      }
+    },
+    "owner": "ginmeek"
   }
 }
