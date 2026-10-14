@@ -4,13 +4,13 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 
 import styles from "./popularjobs.style";
-import { COLORS, SIZES } from "../../../constants";
+import { SIZES } from "../../../constants";
 import PopularJobCard from "../../common/cards/popular/PopularJobCard";
+import JobPulseLoader from "../../common/loader/JobPulseLoader";
 import useFetch from "../../../hooks/useFetch";
 
 const Popularjobs = () => {
@@ -38,7 +38,7 @@ const Popularjobs = () => {
       <View style={styles.cardsContainer}>
         {isLoading ? (
           <View style={styles.centerContainer}>
-            <ActivityIndicator size="large" color={COLORS.accent} />
+            <JobPulseLoader size="medium" message="Curating top featured positions..." />
           </View>
         ) : error ? (
           <View style={styles.centerContainer}>

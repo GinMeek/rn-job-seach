@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { FavoritesProvider } from "../context/FavoritesContext";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -20,7 +21,11 @@ const Layout = () => {
 
   if (!fontsLoaded && !fontError) return null;
 
-  return <Stack onLayout={onLayoutRootView} />;
+  return (
+    <FavoritesProvider>
+      <Stack onLayout={onLayoutRootView} />
+    </FavoritesProvider>
+  );
 };
 
 export default Layout;

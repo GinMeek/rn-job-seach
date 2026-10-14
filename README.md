@@ -6,6 +6,24 @@ A modern, high-performance cross-platform mobile application built with **React 
 
 ## 🌟 Key Features
 
+- **Custom Brand Identity & Logo**:
+  - Distinctive **JobPulse** brand emblem combining a tech viewfinder frame and dynamic pulse wave.
+  - Deployed across **app icon**, Android **adaptive icon**, high-res **splash screen**, web **favicon**, and in-app navigation headers.
+  - Branded **`JobPulseLoader`** with breathing logo pulse animation.
+- **Interactive Slide-Out Menu Drawer**:
+  - Tap the top-left menu button to slide open the interactive navigation drawer.
+  - Quick-jump shortcuts (*Search All, Featured, Latest, Remote Only*).
+  - Filter by popular tech stacks (*React, React Native, Python, TypeScript, Design, Engineering*).
+  - Real-time data provider status indicators (*Remotive 🟢, Arbeitnow 🟢*).
+  - One-tap "Force Refresh Feeds" cache clearer and native app sharing.
+- **Persistent "Add to Favorite" & Saved Jobs Screen**:
+  - Bookmarked jobs are stored persistently on-device via `@react-native-async-storage/async-storage`.
+  - Accessible via the **Saved Jobs** item in the interactive menu drawer with a real-time badge count.
+  - Dedicated `/favorites` screen allowing users to browse saved positions, jump directly to job details, or remove them with a single tap.
+  - Heart bookmark button in Job Details footer dynamically syncs across the entire application.
+- **Interactive Brand Header**:
+  - Replaces legacy static avatar with the interactive **JobPulse logo** button.
+  - Tapping opens the **About JobPulse** modal showcasing version, open API architecture, and live feature highlights.
 - **Free Open APIs (Zero API Keys Required)**:
   - **Remotive API**: Global remote tech, design, marketing, and engineering jobs with verified salary ranges and company logos.
   - **Arbeitnow API**: Live European and international software engineering positions with tags, job types, and hourly updates.
@@ -14,12 +32,6 @@ A modern, high-performance cross-platform mobile application built with **React 
   - Live relative timestamps on all job cards: *"Just now"*, *"15m ago"*, *"2h ago"*, *"3d ago"*.
   - Clean company avatars with automatic two-letter initials fallbacks.
   - Badges for **Salary ranges**, **Remote status**, **Employment type** (*Full-time, Contract, Internship*), and **Source** (*Remotive / Arbeitnow*).
-- **Interactive Experience**:
-  - Quick filter categories (*Remote, Engineering, React, Python, Full-time*).
-  - Search screen with live results count, source filter pills, and empty-state guidance.
-  - Pull-to-refresh on Home and Search views.
-  - Native job sharing and interactive heart bookmark toggles.
-  - Direct application links opening external company career portals safely.
 - **Modern Stack**: Upgraded to **Expo SDK 51**, React Native 0.74, React 18, and file-based routing via **Expo Router 3.5**.
 
 ---
@@ -36,16 +48,24 @@ A modern, high-performance cross-platform mobile application built with **React 
 rn-job-seach/
 ├── app/                        # Expo Router routes
 │   ├── _layout.js              # Root layout & font loading
-│   ├── index.js                # Home screen (Featured & Latest jobs)
+│   ├── index.js                # Home screen (Featured & Latest jobs + Drawer & Modals)
 │   ├── job-details/[id].js     # Detailed job view (About, Qualifications, Responsibilities)
 │   └── search/[id].js          # Search results with live filters
-├── assets/                     # Fonts, icons, and adaptive icons
+├── assets/                     # Branded icons, splash screen, and fonts
+│   ├── icon.png                # 1024x1024 squircle app icon
+│   ├── adaptive-icon.png       # 1024x1024 Android adaptive foreground
+│   ├── splash.png              # 1284x2778 branded splash screen
+│   ├── favicon.png             # 48x48 web favicon
+│   └── images/logo.png         # 512x512 in-app brand emblem
 ├── components/                 # UI components
 │   ├── common/cards/           # Modern Popular & Nearby/Latest job cards
+│   ├── common/drawer/          # Interactive slide-out MenuDrawer
 │   ├── common/header/          # Header action buttons
+│   ├── common/loader/          # Branded pulsing JobPulseLoader
+│   ├── common/modal/           # About JobPulse modal
 │   ├── home/                   # Welcome, Featured carousel, Latest positions
 │   └── jobdetails/             # Company header, tabs, specifics, footer CTA
-├── constants/                  # Color palette, typography, icons, shadows
+├── constants/                  # Color palette, typography, icons, shadows, images
 ├── hooks/                      # Custom hooks (useFetch, useLocation)
 ├── services/                   # Unified open API service (jobService.js)
 ├── utils/                      # Relative datetime, HTML sanitization, avatar initials

@@ -8,6 +8,8 @@ import {
   Popularjobs,
   ScreenHeaderBtn,
   Welcome,
+  MenuDrawer,
+  AboutModal,
 } from "../components";
 import jobService from "../services/jobService";
 
@@ -16,6 +18,8 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [aboutVisible, setAboutVisible] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -41,10 +45,18 @@ const Home = () => {
           headerStyle: { backgroundColor: COLORS.lightWhite },
           headerShadowVisible: false,
           headerLeft: () => (
-            <ScreenHeaderBtn iconUrl={icons.menu} dimension="60%" />
+            <ScreenHeaderBtn
+              iconUrl={icons.menu}
+              dimension="60%"
+              handlePress={() => setMenuVisible(true)}
+            />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
+            <ScreenHeaderBtn
+              iconUrl={images.logo}
+              dimension="80%"
+              handlePress={() => setAboutVisible(true)}
+            />
           ),
           headerTitle: "",
         }}
@@ -80,6 +92,19 @@ const Home = () => {
           <Nearbyjobs key={`nearby-${refreshKey}`} />
         </View>
       </ScrollView>
+
+      {/* Interactive Menu Drawer */}
+      <MenuDrawer
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        onRefreshData={onRefresh}
+      />
+
+      {/* About App Modal */}
+      <AboutModal
+        visible={aboutVisible}
+        onClose={() => setAboutVisible(false)}
+      />
     </SafeAreaView>
   );
 };

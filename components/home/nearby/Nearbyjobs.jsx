@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 
 import styles from "./nearbyjobs.style";
-import { COLORS } from "../../../constants";
 import NearbyJobCard from "../../common/cards/nearby/NearbyJobCard";
+import JobPulseLoader from "../../common/loader/JobPulseLoader";
 import useFetch from "../../../hooks/useFetch";
 
 const Nearbyjobs = () => {
@@ -25,7 +25,7 @@ const Nearbyjobs = () => {
       <View style={styles.cardsContainer}>
         {isLoading ? (
           <View style={styles.centerContainer}>
-            <ActivityIndicator size="large" color={COLORS.accent} />
+            <JobPulseLoader size="small" message="Loading live job feeds..." />
           </View>
         ) : error ? (
           <View style={styles.centerContainer}>

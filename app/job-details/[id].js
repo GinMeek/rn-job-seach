@@ -3,7 +3,6 @@ import {
   View,
   SafeAreaView,
   ScrollView,
-  ActivityIndicator,
   RefreshControl,
   Share,
   TouchableOpacity,
@@ -18,6 +17,7 @@ import {
   JobFooter,
   ScreenHeaderBtn,
   Specifics,
+  JobPulseLoader,
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hooks/useFetch";
@@ -125,7 +125,11 @@ const JobDetails = () => {
       >
         {isLoading ? (
           <View style={{ flex: 1, padding: 50, alignItems: "center", justifyContent: "center" }}>
-            <ActivityIndicator size="large" color={COLORS.accent} />
+            <JobPulseLoader
+              size="large"
+              message="Loading full position details..."
+              fullscreen
+            />
           </View>
         ) : error ? (
           <View style={{ padding: 40, alignItems: "center" }}>
@@ -173,7 +177,7 @@ const JobDetails = () => {
         )}
       </ScrollView>
 
-      {job && <JobFooter url={job.job_apply_link} />}
+      {job && <JobFooter job={job} url={job.job_apply_link} />}
     </SafeAreaView>
   );
 };

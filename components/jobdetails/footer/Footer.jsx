@@ -1,28 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, Image, Linking, Alert } from "react-native";
 
 import styles from "./footer.style";
 import { icons } from "../../../constants";
+import { useFavorites } from "../../../context/FavoritesContext";
 
-const Footer = ({ url }) => {
-  const [isSaved, setIsSaved] = useState(false);
+const Footer = ({ job, url }) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isSaved = isFavorite(job?.job_id);
+
+  const handleToggleFavorite = async () => {
+    if (!job) return;
+    await toggleFavorite(job);
+  };
 
   const handleApply = async () => {
-    if (!url) {
+    const targetUrl = url || job?.job_apply_link;
+    if (!targetUrl) {
       Alert.alert("Notice", "Application link is currently unavailable.");
       return;
     }
 
     try {
-      const supported = await Linking.canOpenURL(url);
+      const supported = await Linking.canOpenURL(targetUrl);
       if (supported) {
-        await Linking.openURL(url);
+        await Linking.openURL(targetUrl);
       } else {
-        await Linking.openURL(url);
+        await Linking.openURL(targetUrl);
       }
     } catch (err) {
       console.warn("Could not open URL:", err);
-      Linking.openURL(url);
+      Linking.openURL(targetUrl);
     }
   };
 
@@ -30,7 +38,7 @@ const Footer = ({ url }) => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.likeBtn(isSaved)}
-        onPress={() => setIsSaved(!isSaved)}
+        onPress={handleToggleFavorite}
         activeOpacity={0.7}
       >
         <Image

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   TouchableOpacity,
   View,
@@ -10,7 +9,7 @@ import {
 } from "react-native";
 import { Stack, useRouter, useGlobalSearchParams } from "expo-router";
 
-import { ScreenHeaderBtn, NearbyJobCard } from "../../components";
+import { ScreenHeaderBtn, NearbyJobCard, JobPulseLoader } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import styles from "../../styles/search";
 import jobService from "../../services/jobService";
@@ -129,7 +128,10 @@ const JobSearch = () => {
 
             {searchLoader && (
               <View style={styles.loaderContainer}>
-                <ActivityIndicator size="large" color={COLORS.accent} />
+                <JobPulseLoader
+                  size="medium"
+                  message={`Finding live matches for "${queryTerm}"...`}
+                />
               </View>
             )}
 
