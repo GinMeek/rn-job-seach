@@ -13,24 +13,37 @@ import PopularJobCard from "../../common/cards/popular/PopularJobCard";
 import JobPulseLoader from "../../common/loader/JobPulseLoader";
 import useFetch from "../../../hooks/useFetch";
 
-const Popularjobs = () => {
+const Popularjobs = ({ activeTab = "All" }) => {
   const router = useRouter();
   const [selectedJob, setSelectedJob] = useState(null);
-  const { data, isLoading, error, refetch } = useFetch("popular");
+  const { data, isLoading, error, refetch } = useFetch("popular", {
+    category: activeTab,
+  });
 
   const handleCardPress = (item) => {
     setSelectedJob(item.job_id);
     router.push(`/job-details/${item.job_id}`);
   };
 
+  const handleViewAll = () => {
+    const targetSearch = activeTab === "All" ? "Featured" : activeTab;
+    router.push(`/search/${encodeURIComponent(targetSearch)}`);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Featured Roles</Text>
-          <Text style={styles.headerSubtitle}>Curated high-impact positions</Text>
+          <Text style={styles.headerTitle}>
+            {activeTab === "All" ? "Featured Roles" : `Featured Roles • ${activeTab}`}
+          </Text>
+          <Text style={styles.headerSubtitle}>
+            {activeTab === "All"
+              ? "Curated high-impact positions"
+              : `Top ${activeTab} positions sorted by newest`}
+          </Text>
         </View>
-        <TouchableOpacity onPress={() => router.push("/search/Developer")}>
+        <TouchableOpacity onPress={handleViewAll}>
           <Text style={styles.headerBtn}>View all</Text>
         </TouchableOpacity>
       </View>
@@ -38,7 +51,14 @@ const Popularjobs = () => {
       <View style={styles.cardsContainer}>
         {isLoading ? (
           <View style={styles.centerContainer}>
-            <JobPulseLoader size="medium" message="Curating top featured positions..." />
+            <JobPulseLoader
+              size="medium"
+              message={
+                activeTab === "All"
+                  ? "Curating top featured positions..."
+                  : `Curating top ${activeTab} positions...`
+              }
+            />
           </View>
         ) : error ? (
           <View style={styles.centerContainer}>
@@ -49,7 +69,9 @@ const Popularjobs = () => {
           </View>
         ) : data.length === 0 ? (
           <View style={styles.centerContainer}>
-            <Text style={styles.emptyText}>No featured jobs at the moment</Text>
+            <Text style={styles.emptyText}>
+              {`No featured ${activeTab === "All" ? "" : activeTab + " "}positions found`}
+            </Text>
           </View>
         ) : (
           <FlatList

@@ -14,16 +14,18 @@ import { icons, SIZES, COLORS } from "../../../constants";
 
 const jobCategories = ["All", "Remote", "Engineering", "React", "Python", "Full-time"];
 
-const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
+const Welcome = ({
+  searchTerm,
+  setSearchTerm,
+  handleClick,
+  activeCategory = "All",
+  setActiveCategory,
+}) => {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState("All");
 
   const handleCategoryPress = (category) => {
-    setActiveCategory(category);
-    if (category === "All") {
-      router.push("/search/Developer");
-    } else {
-      router.push(`/search/${category}`);
+    if (setActiveCategory) {
+      setActiveCategory(category);
     }
   };
 

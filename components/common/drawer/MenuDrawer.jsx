@@ -8,7 +8,6 @@ import {
   Image,
   ScrollView,
   Animated,
-  Share,
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -82,16 +81,6 @@ const MenuDrawer = ({ visible, onClose, onRefreshData }) => {
     }, 400);
   };
 
-  const handleShare = async () => {
-    try {
-      await Share.share({
-        message: "Check out JobPulse — a modern React Native app for finding remote & tech jobs with zero API keys!\nhttps://github.com",
-        title: "JobPulse App",
-      });
-    } catch (e) {
-      console.warn("Share error:", e);
-    }
-  };
 
   return (
     <Modal
@@ -254,15 +243,6 @@ const MenuDrawer = ({ visible, onClose, onRefreshData }) => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.actionBtn, styles.actionBtnSecondary]}
-              onPress={handleShare}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.actionBtnText, styles.actionBtnTextSecondary]}>
-                📤 Share JobPulse
-              </Text>
-            </TouchableOpacity>
 
             <Text style={styles.footerText}>
               Built with Expo SDK 51 & React Native{"\n"}100% Free & Open APIs

@@ -20,6 +20,7 @@ const Home = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [menuVisible, setMenuVisible] = useState(false);
   const [aboutVisible, setAboutVisible] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -82,13 +83,18 @@ const Home = () => {
           <Welcome
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
             handleClick={() => {
               if (searchTerm.trim()) {
                 router.push(`/search/${encodeURIComponent(searchTerm.trim())}`);
               }
             }}
           />
-          <Popularjobs key={`popular-${refreshKey}`} />
+          <Popularjobs
+            key={`popular-${refreshKey}`}
+            activeTab={activeCategory}
+          />
           <Nearbyjobs key={`nearby-${refreshKey}`} />
         </View>
       </ScrollView>

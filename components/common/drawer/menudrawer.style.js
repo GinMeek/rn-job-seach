@@ -201,19 +201,10 @@ const styles = StyleSheet.create({
     gap: 8,
     ...SHADOWS.small,
   },
-  actionBtnSecondary: {
-    backgroundColor: "#F1F5F9",
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginTop: 8,
-  },
   actionBtnText: {
     fontFamily: FONT.bold,
     fontSize: SIZES.small + 2,
     color: COLORS.white,
-  },
-  actionBtnTextSecondary: {
-    color: COLORS.primary,
   },
   footerText: {
     textAlign: "center",

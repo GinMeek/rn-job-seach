@@ -97,15 +97,22 @@ const normalizeArbeitnowJob = (item) => {
  * Fetches fresh jobs from both Remotive and Arbeitnow concurrently
  */
 export const fetchAllJobs = async ({ forceRefresh = false, query = "" } = {}) => {
+  const normalizedQuery = (query || "").trim();
+  const lowerQuery = normalizedQuery.toLowerCase();
+  const isKeywordView = !normalizedQuery || ["latest", "all", "featured"].includes(lowerQuery);
+
   const now = Date.now();
   if (!forceRefresh && cachedJobs.length > 0 && (now - lastFetchTime) < CACHE_TTL_MS) {
-    if (query) {
-      return filterJobs(cachedJobs, query);
+    if (isKeywordView) {
+      return [...cachedJobs].sort((a, b) => b.job_posted_at_timestamp - a.job_posted_at_timestamp);
     }
-    return cachedJobs;
+    return filterJobs(cachedJobs, normalizedQuery);
   }
 
-  const remotiveUrl = query ? `${REMOTIVE_API_BASE}?search=${encodeURIComponent(query)}&limit=50` : `${REMOTIVE_API_BASE}?limit=50`;
+  // Optimize remote query: for global views or general types, fetch full limit
+  const remotiveUrl = (isKeywordView || ["remote", "full-time", "fulltime"].includes(lowerQuery))
+    ? `${REMOTIVE_API_BASE}?limit=100`
+    : `${REMOTIVE_API_BASE}?search=${encodeURIComponent(normalizedQuery)}&limit=100`;
   const arbeitnowUrl = `${ARBEITNOW_API_BASE}?page=1`;
 
   const results = await Promise.allSettled([
@@ -133,10 +140,13 @@ export const fetchAllJobs = async ({ forceRefresh = false, query = "" } = {}) =>
 
   // If both failed and we have cache, fallback to cache
   if (combined.length === 0 && cachedJobs.length > 0) {
-    return query ? filterJobs(cachedJobs, query) : cachedJobs;
+    if (isKeywordView) {
+      return [...cachedJobs].sort((a, b) => b.job_posted_at_timestamp - a.job_posted_at_timestamp);
+    }
+    return filterJobs(cachedJobs, normalizedQuery);
   }
 
-  // Sort descending by posted timestamp (newest jobs first)
+  // Strictly sort descending by posted timestamp (newest jobs first)
   combined.sort((a, b) => b.job_posted_at_timestamp - a.job_posted_at_timestamp);
 
   // Update memory cache
@@ -145,43 +155,74 @@ export const fetchAllJobs = async ({ forceRefresh = false, query = "" } = {}) =>
     lastFetchTime = now;
   }
 
-  return query ? filterJobs(combined, query) : combined;
+  if (isKeywordView) {
+    return combined;
+  }
+  return filterJobs(combined, normalizedQuery);
 };
 
 /**
- * Filter jobs locally across title, company, tags, location, and description
+ * Filter jobs locally across category, title, company, tags, location, and employment type.
+ * Always guarantees descending sort by newest posted date.
  */
 export const filterJobs = (jobs, query) => {
   if (!query || !query.trim()) return jobs;
   const q = query.toLowerCase().trim();
 
-  return jobs.filter((job) => {
-    return (
-      job.job_title?.toLowerCase().includes(q) ||
-      job.employer_name?.toLowerCase().includes(q) ||
-      job.job_location?.toLowerCase().includes(q) ||
-      job.job_employment_type?.toLowerCase().includes(q) ||
-      job.tags?.some((t) => t.toLowerCase().includes(q))
+  // If query is one of the global chronological views, return all sorted jobs
+  if (["latest", "all", "featured"].includes(q)) {
+    return [...jobs].sort((a, b) => b.job_posted_at_timestamp - a.job_posted_at_timestamp);
+  }
+
+  let filtered = [];
+
+  if (q === "remote") {
+    filtered = jobs.filter(
+      (job) => job.is_remote || job.job_location?.toLowerCase().includes("remote")
     );
-  });
+  } else if (q === "full-time" || q === "fulltime") {
+    filtered = jobs.filter(
+      (job) => job.job_employment_type?.toLowerCase().includes("full")
+    );
+  } else {
+    filtered = jobs.filter((job) => {
+      return (
+        job.job_title?.toLowerCase().includes(q) ||
+        job.employer_name?.toLowerCase().includes(q) ||
+        job.job_location?.toLowerCase().includes(q) ||
+        job.job_employment_type?.toLowerCase().includes(q) ||
+        job.category?.toLowerCase().includes(q) ||
+        job.tags?.some((t) => t.toLowerCase().includes(q)) ||
+        job.job_description?.toLowerCase().includes(q)
+      );
+    });
+  }
+
+  // Guarantee strict descending sort by timestamp
+  return filtered.sort((a, b) => b.job_posted_at_timestamp - a.job_posted_at_timestamp);
 };
 
 /**
- * Get popular / featured jobs for home carousel
+ * Get popular / featured jobs for home carousel.
+ * Supports active tab filtering (e.g. 'Python', 'React', 'Remote', 'Full-time', 'All').
+ * Always returns up to 10 latest matching positions.
  */
-export const getPopularJobs = async () => {
+export const getPopularJobs = async (category = "All") => {
   const jobs = await fetchAllJobs();
-  // Return top 10 featured jobs
-  return jobs.slice(0, 10);
+  if (!category || category.toLowerCase().trim() === "all") {
+    return jobs.slice(0, 10);
+  }
+
+  const categoryJobs = filterJobs(jobs, category);
+  return categoryJobs.slice(0, 10);
 };
 
 /**
- * Get latest / nearby jobs
+ * Get latest positions (always newest first).
  */
 export const getLatestJobs = async () => {
   const jobs = await fetchAllJobs();
-  // Return recent jobs
-  return jobs.slice(10, 35);
+  return jobs.slice(0, 20);
 };
 
 /**

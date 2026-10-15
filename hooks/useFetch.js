@@ -22,7 +22,7 @@ const useFetch = (endpoint, query = {}) => {
 
       switch (endpoint) {
         case "popular":
-          result = await jobService.getPopularJobs();
+          result = await jobService.getPopularJobs(query?.category || query?.activeTab);
           break;
 
         case "latest":
@@ -52,7 +52,7 @@ const useFetch = (endpoint, query = {}) => {
     } finally {
       setIsLoading(false);
     }
-  }, [endpoint, query?.query, query?.job_id]);
+  }, [endpoint, query?.query, query?.job_id, query?.category, query?.activeTab]);
 
   useEffect(() => {
     fetchData();
